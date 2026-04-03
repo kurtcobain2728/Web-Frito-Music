@@ -39,10 +39,11 @@ const DownloadSection = () => {
                         transition={{ delay: 0.2 }}
                         className="flex flex-col items-center lg:items-start gap-4"
                     >
-                        {/* Botón de descarga APK - enlace al archivo real */}
+                        {/* Botón de descarga APK - GitHub Releases */}
                         <a
-                            href="/app/Music Frito v1.apk"
-                            download="Music Frito v1.apk"
+                            href="https://github.com/kurtcobain2728/Web-Frito-Music/releases/download/v1.0.0/Music.Frito.v1.apk"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-4 px-10 py-5 bg-mf-primary hover:bg-mf-primary-hover text-white text-lg font-bold rounded-2xl overflow-hidden transition-all shadow-[0_0_40px_-10px_rgba(255,87,34,0.6)] hover:shadow-[0_0_60px_-15px_rgba(255,87,34,0.8)] hover:-translate-y-1"
                         >
                             <Download className="w-6 h-6 group-hover:animate-bounce" />
