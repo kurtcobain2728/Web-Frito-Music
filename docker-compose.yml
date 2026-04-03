@@ -1,18 +1,19 @@
 services:
   app:
-    image: node:20-alpine
-    working_dir: /app
-    volumes:
-      - .:/app
-      - /app/node_modules
+    build:
+      context: .
+      target: production-stage
     ports:
-      - "5173:5173"
-    environment:
-      - NODE_ENV=development
-    command: npm run dev -- --host
+      - "80:80"
+    restart: always
 
-  # Opcional: Levantar la versión de producción localmente para pruebas
-  # production:
-  #   build: .
+  # --- Si necesitas desarrollo local con Hot Reload ---
+  # dev:
+  #   image: node:20-alpine
+  #   working_dir: /app
+  #   volumes:
+  #     - .:/app
+  #     - /app/node_modules
   #   ports:
-  #     - "8080:80"
+  #     - "5173:5173"
+  #   command: npm run dev -- --host
