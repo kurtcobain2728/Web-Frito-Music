@@ -42,3 +42,21 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* ── Dynamic Header (GSAP ScrollTrigger) ── */
+.main-header {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.main-header.header-scrolled {
+  background: rgba(9, 9, 11, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    0 1px 0 rgba(255, 87, 34, 0.15),
+    0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.main-header.header-scrolled > div {
+  height: 3rem; /* compact from 4rem to 3rem */
+}

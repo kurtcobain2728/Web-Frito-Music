@@ -1,10 +1,101 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Download, Info, ShoppingBag } from 'lucide-react';
+import React, { useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+import { Download, Info } from 'lucide-react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const DownloadSection = () => {
+    const sectionRef = useRef(null);
+
+    useGSAP(() => {
+        /* ── Title reveal ── */
+        gsap.from('.dl-title', {
+            scrollTrigger: {
+                trigger: '.dl-title',
+                start: 'top 85%',
+                end: 'top 55%',
+                scrub: 1,
+            },
+            y: 60,
+            opacity: 0,
+        });
+
+        /* ── Subtitle reveal ── */
+        gsap.from('.dl-subtitle', {
+            scrollTrigger: {
+                trigger: '.dl-subtitle',
+                start: 'top 85%',
+                end: 'top 60%',
+                scrub: 1,
+            },
+            y: 40,
+            opacity: 0,
+        });
+
+        /* ── Button slide up ── */
+        gsap.from('.dl-button-area', {
+            scrollTrigger: {
+                trigger: '.dl-button-area',
+                start: 'top 90%',
+                end: 'top 65%',
+                scrub: 1,
+            },
+            y: 50,
+            opacity: 0,
+        });
+
+        /* ── Animated counter: 0 → 112MB ── */
+        const sizeEl = sectionRef.current?.querySelector('.size-counter');
+        if (sizeEl) {
+            const counter = { val: 0 };
+            gsap.to(counter, {
+                val: 112,
+                duration: 2,
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: '.download-stats',
+                    start: 'top 80%',
+                },
+                onUpdate: () => {
+                    sizeEl.textContent = Math.round(counter.val) + 'MB';
+                },
+            });
+        }
+
+        /* ── Phone mockup entrance + 3D parallax ── */
+        const mockup = sectionRef.current?.querySelector('.dl-phone-mockup');
+        if (mockup) {
+            gsap.from(mockup, {
+                scrollTrigger: {
+                    trigger: mockup,
+                    start: 'top 90%',
+                    end: 'top 50%',
+                    scrub: 1,
+                },
+                x: 100,
+                opacity: 0,
+                rotate: -5,
+            });
+
+            gsap.to(mockup, {
+                scrollTrigger: {
+                    trigger: mockup,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: true,
+                },
+                rotateY: 12,
+                rotateX: -4,
+                scale: 1.04,
+                ease: 'none',
+            });
+        }
+    }, { scope: sectionRef });
+
     return (
-        <section id="download" className="relative py-24 px-4 z-10 w-full overflow-hidden snap-start">
+        <section ref={sectionRef} id="download" className="relative py-24 px-4 z-10 w-full overflow-hidden snap-start">
 
             {/* Decorative background glow */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl aspect-square bg-mf-primary/10 rounded-full blur-[120px] pointer-events-none" />
@@ -13,32 +104,15 @@ const DownloadSection = () => {
 
                 {/* Left: Content & Button */}
                 <div className="flex-1 text-center lg:text-left">
-                    <motion.h2
-                        className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight"
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                    >
+                    <h2 className="dl-title text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight">
                         Toma el control de tu biblioteca musical <span className="text-mf-primary">hoy mismo</span>.
-                    </motion.h2>
+                    </h2>
 
-                    <motion.p
-                        className="text-xl text-mf-text-muted mb-10 max-w-xl mx-auto lg:mx-0"
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                    >
+                    <p className="dl-subtitle text-xl text-mf-text-muted mb-10 max-w-xl mx-auto lg:mx-0">
                         Libérate de las suscripciones mensuales y los anuncios. Vuelve a disfrutar la música pura y dura.
-                    </motion.p>
+                    </p>
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.2 }}
-                        className="flex flex-col items-center lg:items-start gap-4"
-                    >
+                    <div className="dl-button-area flex flex-col items-center lg:items-start gap-4">
                         {/* Botón de descarga APK - GitHub Releases */}
                         <a
                             href="https://github.com/kurtcobain2728/Web-Frito-Music/releases/download/v1.0.0/Music.Frito.v1.apk"
@@ -49,9 +123,9 @@ const DownloadSection = () => {
                             <Download className="w-6 h-6 group-hover:animate-bounce" />
                             Descargar Music Frito (APK)
                         </a>
-                        <div className="flex items-center gap-2 text-sm text-mf-text-muted font-medium ml-2">
+                        <div className="download-stats flex items-center gap-2 text-sm text-mf-text-muted font-medium ml-2">
                             <Info className="w-4 h-4" />
-                            <span>Versión 1.0.0 • 112MB • Android 8.0+</span>
+                            <span>Versión 1.0.0 • <span className="size-counter">0MB</span> • Android 8.0+</span>
                         </div>
 
                         {/* Botón de Play Store - Próximamente */}
@@ -70,23 +144,20 @@ const DownloadSection = () => {
                                 Próximamente
                             </span>
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
 
                 {/* Right: Mockup con Musica.jpg */}
-                <motion.div
-                    className="flex-1 w-full max-w-sm mx-auto aspect-[9/19] bg-mf-bg rounded-[2.5rem] border-8 border-mf-surface-light shadow-2xl flex items-center justify-center relative overflow-hidden group hover:border-mf-primary/50 transition-colors"
-                    initial={{ opacity: 0, x: 50, rotate: -5 }}
-                    whileInView={{ opacity: 1, x: 0, rotate: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                <div
+                    className="dl-phone-mockup flex-1 w-full max-w-sm mx-auto aspect-[9/19] bg-mf-bg rounded-[2.5rem] border-8 border-mf-surface-light shadow-2xl flex items-center justify-center relative overflow-hidden group hover:border-mf-primary/50 transition-colors"
+                    style={{ perspective: '800px' }}
                 >
                     <img
                         src="/Musica.jpg"
                         alt="Music Frito App"
                         className="w-full h-full object-cover rounded-[1.8rem]"
                     />
-                </motion.div>
+                </div>
 
             </div>
         </section>

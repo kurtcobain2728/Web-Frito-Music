@@ -1,15 +1,39 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { PlayCircle, PauseCircle } from 'lucide-react';
 import AnimatedLogo from './AnimatedLogo';
 
 const HeroSection = () => {
     const videoRef = useRef(null);
     const containerRef = useRef(null);
+    const sectionRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [hasAutoPlayed, setHasAutoPlayed] = useState(false);
 
-    // Auto-play when scrolled into view using IntersectionObserver
+    /* ─── GSAP Cinematic Timeline ─── */
+    useGSAP(() => {
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+        tl.from('.hero-logo', { scale: 0, rotation: 360, duration: 1.2 })
+          .from('.hero-title-char', {
+              y: 50,
+              opacity: 0,
+              rotateX: -90,
+              stagger: 0.03,
+              duration: 0.6,
+              ease: 'back.out(1.7)',
+          }, '-=0.4')
+          .from('.hero-subtitle', { y: 60, opacity: 0, duration: 0.6 }, '-=0.3')
+          .from('.hero-video', {
+              y: 80,
+              opacity: 0,
+              scale: 0.9,
+              duration: 0.8,
+          }, '-=0.2');
+    }, { scope: sectionRef });
+
+    // Auto-play video when scrolled into view
     useEffect(() => {
         const video = videoRef.current;
         const container = containerRef.current;
@@ -43,39 +67,44 @@ const HeroSection = () => {
         }
     };
 
+    /* ─── Split text into individual chars for letter-by-letter animation ─── */
+    const splitText = (text) => {
+        return text.split('').map((char, i) => (
+            <span
+                key={i}
+                className="hero-title-char inline-block"
+                style={{ display: char === ' ' ? 'inline' : 'inline-block' }}
+            >
+                {char === ' ' ? '\u00A0' : char}
+            </span>
+        ));
+    };
+
     return (
-        <section id="hero" className="relative min-h-[90vh] flex flex-col items-center justify-center pt-24 px-4 text-center z-10 snap-start">
+        <section ref={sectionRef} id="hero" className="relative min-h-[90vh] flex flex-col items-center justify-center pt-24 px-4 text-center z-10 snap-start">
 
             {/* Animated Logo Container */}
-            <div className="w-48 h-48 md:w-64 md:h-64 mb-8">
+            <div className="hero-logo w-48 h-48 md:w-64 md:h-64 mb-8">
                 <AnimatedLogo />
             </div>
 
-            <motion.h1
-                className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.5, duration: 0.8 }}
+            <h1
+                className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 text-white"
+                style={{ perspective: '600px' }}
             >
-                Tu música, tus reglas.<br />Sin conexión.
-            </motion.h1>
+                {splitText('Tu música, tus reglas.')}
+                <br />
+                {splitText('Sin conexión.')}
+            </h1>
 
-            <motion.p
-                className="text-lg md:text-xl text-mf-text-muted max-w-2xl mb-12"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.7, duration: 0.8 }}
-            >
+            <p className="hero-subtitle text-lg md:text-xl text-mf-text-muted max-w-2xl mb-12">
                 El reproductor offline con interfaz premium y cero interrupciones que estabas esperando.
-            </motion.p>
+            </p>
 
             {/* Video Promocional */}
-            <motion.div
+            <div
                 ref={containerRef}
-                className="w-full max-w-4xl aspect-video rounded-2xl border-2 border-mf-surface-light bg-mf-surface/50 backdrop-blur-sm mb-12 shadow-2xl relative overflow-hidden group cursor-pointer hover:border-mf-primary/50 transition-colors"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.9, duration: 0.8 }}
+                className="hero-video w-full max-w-4xl aspect-video rounded-2xl border-2 border-mf-surface-light bg-mf-surface/50 backdrop-blur-sm mb-12 shadow-2xl relative overflow-hidden group cursor-pointer hover:border-mf-primary/50 transition-colors"
                 onClick={toggleVideo}
             >
                 <video
@@ -96,7 +125,7 @@ const HeroSection = () => {
                         <PlayCircle className="w-16 h-16 text-white/80 drop-shadow-lg" />
                     )}
                 </div>
-            </motion.div>
+            </div>
 
         </section>
     );
