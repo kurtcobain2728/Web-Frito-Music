@@ -20,7 +20,7 @@ const FeatureCard = ({ icon: Icon, title, description, delay = 0, className = ""
 
 const FeaturesSection = () => {
     return (
-        <section id="features" className="relative min-h-screen py-24 px-4 z-10 w-full max-w-7xl mx-auto flex flex-col justify-center">
+        <section id="features" className="relative min-h-screen py-24 px-4 z-10 w-full max-w-7xl mx-auto flex flex-col justify-center snap-start">
 
             <div className="text-center mb-16 md:mb-24">
                 <motion.h2

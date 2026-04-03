@@ -4,7 +4,7 @@ import { Headphones } from 'lucide-react';
 
 const AboutSection = () => {
     return (
-        <section id="about" className="relative py-24 px-4 z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center">
+        <section id="about" className="relative py-24 px-4 z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center snap-start">
 
             <motion.div
                 className="w-16 h-16 bg-mf-surface rounded-full flex items-center justify-center text-mf-primary mb-8 border border-mf-surface-light"

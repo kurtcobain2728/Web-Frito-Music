@@ -6,6 +6,11 @@
   body {
     @apply bg-mf-bg text-mf-text-main antialiased font-sans m-0 min-h-screen overflow-x-hidden;
   }
+
+  /* Ensure all images are responsive by default */
+  img {
+    @apply max-w-full h-auto;
+  }
 }
 
 /* Custom Scrollbar for premium feel */
@@ -24,4 +29,16 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #333;
+}
+
+/* Mobile-friendly touch targets */
+@media (max-width: 640px) {
+  button, a {
+    min-height: 44px;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }
